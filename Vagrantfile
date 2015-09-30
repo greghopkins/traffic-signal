@@ -79,15 +79,14 @@ Vagrant.configure(2) do |config|
     wget -c https://raw.github.com/RobertCNelson/tools/master/pkgs/dtc.sh
     chmod +x dtc.sh
     ./dtc.sh
+    rm dtc.sh
 
     sudo npm install -g bonescript
 
-    # sudo cp /usr/lib/node_modules/bonescript/etc/default/node /etc/default/node
-    # sudo cp /usr/lib/node_modules/bonescript/etc/profile.d/node.sh /etc/profile.d/node.sh
-    # sudo cp /usr/lib/node_modules/bonescript/systemd/\* /lib/systemd/system
+    sudo cp /usr/lib/node_modules/bonescript/etc/default/node /etc/default/node
+    sudo cp /usr/lib/node_modules/bonescript/etc/profile.d/node.sh /etc/profile.d/node.sh
+    # sudo cp /usr/lib/node_modules/bonescript/systemd/* /lib/systemd/system
     # sudo systemctl enable bonescript.socket
     # sudo systemctl enable bonescript-autorun.service
-
-    rm dtc.sh
   SHELL
 end
