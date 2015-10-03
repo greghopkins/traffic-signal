@@ -1,8 +1,7 @@
-var chai = require("chai");
-var sinon = require("sinon");
-var sinonChai = require("sinon-chai");
+var chai = require('chai');
+var sinon = require('sinon');
 var expect = chai.expect;
-chai.use(sinonChai);
+chai.use(require('sinon-chai'));
 
 var b = require('bonescript');
 var TrafficSignal = require('../src/traffic-signal').TrafficSignal;
@@ -23,7 +22,7 @@ describe('Traffic Signal', function() {
     it('should throw if a mapping object not provided', function() {
       expect(function() {
         new TrafficSignal();
-      }).to.throw('must provide a signal to pin mapping');
+      }).to.throw('must provide a signal to pin mapping object');
     });
 
     it('should throw if mapping object is empty', function() {
@@ -34,11 +33,7 @@ describe('Traffic Signal', function() {
 
     it('should not throw if proper mapping object provided', function() {
       expect(function() {
-        new TrafficSignal({
-          foo: 'pin 1',
-          bar: 'pin 2',
-          baz: 'pin 3'
-        });
+        new TrafficSignal(mapping);
       }).not.to.throw();
     });
   });
@@ -73,7 +68,7 @@ describe('Traffic Signal', function() {
     });
 
     describe('set()', function() {
-      beforeEach(function () {
+      beforeEach(function() {
         sinon.spy(b, 'digitalWrite');
       });
 
@@ -84,9 +79,9 @@ describe('Traffic Signal', function() {
         }).to.throw('must provide at least signal name');
       });
 
-      it('should throw if the signal is not found', function () {
+      it('should throw if the signal is not found', function() {
         var thiz = this;
-        expect(function () {
+        expect(function() {
           thiz.trafficSignal.set('foo', true);
         }).to.throw('signal foo not available');
       });
@@ -103,13 +98,106 @@ describe('Traffic Signal', function() {
         expect(b.digitalWrite).to.have.been.calledWith(mapping.green, b.LOW);
       });
 
-      it('should treat no power state as true and pull HIGH', function () {
+      it('should treat no power state as true and pull HIGH', function() {
         this.trafficSignal.set('yellow');
 
         expect(b.digitalWrite).to.have.been.calledWith(mapping.yellow, b.HIGH);
       });
 
-      afterEach(function () {
+      afterEach(function() {
+        b.digitalWrite.restore();
+      });
+    });
+
+    describe('play()', function() {
+      beforeEach(function() {
+        sinon.spy(b, 'digitalWrite');
+      });
+
+      it('throws if not invoked with an array', function() {
+        var thiz = this;
+        expect(function() {
+          thiz.trafficSignal.play();
+        }).to.throw('must provide an array of signal states');
+      });
+
+      it('handles play length of 1', function() {
+        this.trafficSignal.play([{
+          red: true
+        }]);
+        expect(b.digitalWrite).to.have.been.calledWith(mapping.red, b.HIGH);
+      });
+
+      it('handles play length of 1 with all signals powered', function() {
+        this.trafficSignal.play([{
+          red: true,
+          yellow: true,
+          green: true
+        }]);
+
+        expect(b.digitalWrite).to.have.been.calledWith(mapping.red, b.HIGH);
+        expect(b.digitalWrite).to.have.been.calledWith(mapping.yellow, b.HIGH);
+        expect(b.digitalWrite).to.have.been.calledWith(mapping.green, b.HIGH);
+      });
+
+      // FIXME this is a terribly fragile test, but it works for now
+      it('handles complex ordered playback', function() {
+        this.trafficSignal.play([{
+          red: true,
+          yellow: false,
+          green: false
+        }, {
+          red: false,
+          yellow: true,
+          green: false
+        }, {
+          red: false,
+          yellow: false,
+          green: true
+        }]);
+
+        expect(b.digitalWrite.args).to.deep.equal(
+          [
+            [
+              'P8_25',
+              1
+            ],
+            [
+              'P8_24',
+              0
+            ],
+            [
+              'P8_5',
+              0
+            ],
+            [
+              'P8_25',
+              0
+            ],
+            [
+              'P8_24',
+              1
+            ],
+            [
+              'P8_5',
+              0
+            ],
+            [
+              'P8_25',
+              0
+            ],
+            [
+              'P8_24',
+              0
+            ],
+            [
+              'P8_5',
+              1
+            ]
+          ]);
+      });
+
+      afterEach(function() {
         b.digitalWrite.restore();
       });
     });
