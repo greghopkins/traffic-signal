@@ -1,6 +1,6 @@
 # Traffic Signal
 
-This application helps us at [Rivers Agile Solutions](http://www.riversagile.com/) interact with a full-size traffic light that we have wired up with a [Beaglebone](http://beagleboard.org/bone) and some relays. 
+This application helps us at [Rivers Agile Solutions](http://www.riversagile.com/) interact with a full-size traffic light that we have wired up with a [Beaglebone](http://beagleboard.org/bone) and some relays. The application runs directly on the Beaglebone.
 
 <img src="http://i.imgur.com/sHSuIWT.jpg" width="200">
 <img src="http://i.imgur.com/zSyXIq0.jpg" width="200">
