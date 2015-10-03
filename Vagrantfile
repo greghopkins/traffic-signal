@@ -81,7 +81,8 @@ Vagrant.configure(2) do |config|
     ./dtc.sh
     rm dtc.sh
 
-    sudo npm install -g bonescript
+    sudo npm install -g bonescript --no-bin-links
+    sudo npm install -g mocha
 
     sudo cp /usr/lib/node_modules/bonescript/etc/default/node /etc/default/node
     sudo cp /usr/lib/node_modules/bonescript/etc/profile.d/node.sh /etc/profile.d/node.sh

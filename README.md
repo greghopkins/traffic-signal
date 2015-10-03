@@ -26,6 +26,10 @@ During provisioning, you might see some weird errors from `node-gyp` regarding f
 
 The Vagrant shell provisioning does not currently setup any applications. (running `npm install` etc.) You will have to perform those steps manually.
 
+## Running the Tests
+
+To run the tests, execute either `npm test` or `mocha` in the Vagrant shell (accessed with `vagrant ssh`).
+
 ## Known Issues
 
 - During project `npm install`, you might get error messages during binary symlinking. Since we aren't interested in this (or any other binary) at present, `npm install --no-bin-links` should resolve.
