@@ -1,4 +1,4 @@
-# Traffic Signal
+# Traffic Signal ![](https://travis-ci.org/greghopkins/traffic-signal.svg?branch=master)
 
 This application helps us at [Rivers Agile Solutions](http://www.riversagile.com/) interact with a full-size traffic light that we have wired up with a [Beaglebone](http://beagleboard.org/bone) and some relays. The application runs directly on the Beaglebone.
 
