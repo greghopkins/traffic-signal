@@ -1,5 +1,11 @@
 # Traffic Signal
 
+This application helps us at [Rivers Agile Solutions](http://www.riversagile.com/) interact with a full-size traffic light that we have wired up with a [Beaglebone](http://beagleboard.org/bone) and some relays. 
+
+<img src="http://i.imgur.com/sHSuIWT.jpg" width="200">
+<img src="http://i.imgur.com/zSyXIq0.jpg" width="200">
+<img src="http://i.imgur.com/sLxEzAD.jpg" width="200">
+
 ## Quick Start
 
 To ease the pain of understanding the Beaglebone environment (and getting some native things to compile), a Vagrantfile has been provided. It closely approximates what is running on the Beaglebone, although it is not exact.
