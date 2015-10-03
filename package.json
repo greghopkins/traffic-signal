@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "mocha"
+    "test": "BLUEBIRD_DEBUG=1 mocha"
   },
   "author": "Greg Hopkins <greg@riversagile.com>",
   "license": "ISC",
@@ -14,6 +14,7 @@
     "url": "https://github.com/greghopkins/traffic-signal.git"
   },
   "dependencies": {
+    "bluebird": "^2.10.2",
     "body-parser": "^1.14.0",
     "express": "^4.13.3",
     "lodash": "^3.10.1"
@@ -21,6 +22,7 @@
   "devDependencies": {
     "bonescript": "^0.2.5",
     "chai": "^3.3.0",
+    "chai-as-promised": "^5.1.0",
     "mocha": "^2.3.3",
     "sinon": "^1.17.1",
     "sinon-chai": "^2.8.0"

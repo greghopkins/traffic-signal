@@ -2,6 +2,9 @@ var chai = require('chai');
 var sinon = require('sinon');
 var expect = chai.expect;
 chai.use(require('sinon-chai'));
+chai.use(require('chai-as-promised'));
+
+var Promise = require("bluebird");
 
 var b = require('bonescript');
 var TrafficSignal = require('../src/traffic-signal').TrafficSignal;
@@ -72,6 +75,11 @@ describe('Traffic Signal', function() {
         sinon.spy(b, 'digitalWrite');
       });
 
+      it('should return a promise', function () {
+        // TODO is there another way, aside from a poor-man's check
+        expect(this.trafficSignal.set('red', true).then).to.not.be.undefined;
+      });
+
       it('should throw if pin and power state are not provided', function() {
         var thiz = this;
         expect(function() {
@@ -86,10 +94,12 @@ describe('Traffic Signal', function() {
         }).to.throw('signal foo not available');
       });
 
-      it('should pull pin high when power state truthy', function() {
-        this.trafficSignal.set('red', true);
-
-        expect(b.digitalWrite).to.have.been.calledWith(mapping.red, b.HIGH);
+      it.only('should pull pin high when power state truthy', function(done) {
+        this.trafficSignal.set('red', true).then(function () {
+          expect(b.digitalWrite).to.have.been.calledWith(mapping.red, b.HIGH);
+        }, function (err) {
+          done(err);
+        });
       });
 
       it('should pull pin low when power state falsy', function() {
@@ -119,6 +129,11 @@ describe('Traffic Signal', function() {
         expect(function() {
           thiz.trafficSignal.play();
         }).to.throw('must provide an array of signal states');
+      });
+
+      it('returns a promise', function () {
+        // TODO is there another way, aside from a poor-man's check
+        expect(this.trafficSignal.play([]).then).to.not.be.undefined;
       });
 
       it('handles play length of 1', function() {
@@ -195,6 +210,76 @@ describe('Traffic Signal', function() {
               1
             ]
           ]);
+      });
+
+      describe('with time involved', function() {
+        beforeEach(function() {
+          this.clock = sinon.useFakeTimers();
+        });
+
+        // FIXME this is a terribly fragile test, but it works for now
+        it('handles a frame that is numeric, indicating delay in ms', function() {
+          this.trafficSignal.play([{
+              red: true,
+              yellow: false,
+              green: true
+            },
+            1000,
+            {
+              red: true,
+              yellow: true,
+              green: false
+            }
+          ]);
+
+          expect(b.digitalWrite.args).to.deep.equal(
+            [
+              [
+                'P8_25',
+                1
+              ],
+              [
+                'P8_24',
+                0
+              ],
+              [
+                'P8_5',
+                1
+              ]
+            ]);
+          this.clock.tick(1100);
+          expect(b.digitalWrite.args).to.deep.equal(
+            [
+              [
+                'P8_25',
+                1
+              ],
+              [
+                'P8_24',
+                0
+              ],
+              [
+                'P8_5',
+                1
+              ],
+              [
+                'P8_25',
+                1
+              ],
+              [
+                'P8_24',
+                1
+              ],
+              [
+                'P8_5',
+                1
+              ]
+            ]);
+        });
+
+        afterEach(function() {
+          this.clock.restore();
+        });
       });
 
       afterEach(function() {
