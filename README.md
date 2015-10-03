@@ -7,7 +7,15 @@ To ease the pain of understanding the Beaglebone environment (and getting some n
 After installing and configuring Vagrant, the following will get you up and running:
 `vagrant up`
 
-During provisioning, you might see some weird errors from `node-gyp` regarding filesystem permissions - please ignore.
+The Vagrant shell provisioning does not currently setup any applications. (running `npm install` etc.) You will have to perform those steps manually.
+
+## Running the Tests
+
+To run the tests, execute either `npm test` or `mocha` in the Vagrant shell (accessed with `vagrant ssh`).
+
+## Known Issues
+
+- During provisioning, you might see some weird errors from `node-gyp` regarding filesystem permissions - please ignore.
 
 ```
 ==> default: gyp
@@ -23,14 +31,6 @@ During provisioning, you might see some weird errors from `node-gyp` regarding f
 ==> default: EACCES
 ==> default:  attempting to reinstall using temporary dev dir "/usr/lib/node_modules/bonescript/node_modules/i2c/.node-gyp"
 ```
-
-The Vagrant shell provisioning does not currently setup any applications. (running `npm install` etc.) You will have to perform those steps manually.
-
-## Running the Tests
-
-To run the tests, execute either `npm test` or `mocha` in the Vagrant shell (accessed with `vagrant ssh`).
-
-## Known Issues
 
 - During project `npm install`, you might get error messages during binary symlinking. Since we aren't interested in this (or any other binary) at present, `npm install --no-bin-links` should resolve.
 
